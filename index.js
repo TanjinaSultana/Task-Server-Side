@@ -39,10 +39,30 @@ app.post('/task',async(req,res) =>{
 })
 app.delete('/task/:id',async(req,res)=>{
     const id = req.params.id;
-    const query= {_id: new ObjectId(id)}
+    const query= {_id: new ObjectId(id) };
     const result = await taskCollection.deleteOne(query);
     res.send(result);
   })
+  app.put('/task/update/:id',async(req,res)=>{
+    const id = req.params.id;
+    const updatedUser = req.body;
+    console.log(updatedUser);
+    const filter = {_id: id};
+    const options = { upsert: true };
+    const userUpdate = {
+      $set: {
+        title: updatedUser.title,
+        deadline : updatedUser.deadline,
+        priority: updatedUser.priority,
+        shortDesc: updatedUser.shortDesc,
+       
+      },
+    }
+    const result = await taskCollection.updateOne(filter, userUpdate, options);
+    res.send(result)
+
+   })
+   
 // app.get('/packages/:id',async(req,res) =>{
 //    const id = req.params.id;
 //    const query = {_id: new ObjectId(id)}
